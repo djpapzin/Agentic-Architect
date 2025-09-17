@@ -25,6 +25,19 @@ The UI lets a user write a message, select which agents to apply, and preview co
 - `styles.css` — lightweight, responsive styles.
 - `app.js` — local-only mock orchestration (no backend yet). Later this will call standardized Coral agents.
 
+### Repository Structure
+- Root UI
+  - [`index.html`](index.html) — main UI
+  - [`styles.css`](styles.css) — styles for layout and theming
+  - [`app.js`](app.js) — mock agent pipeline and UI behaviors
+- Documentation
+  - [`docs/QUICKSTART.md`](docs/QUICKSTART.md) — fast start (clone → run → branch workflow)
+  - [`docs/PRD.md`](docs/PRD.md) — product requirements (goals, scope, milestones)
+  - [`docs/TODO.md`](docs/TODO.md) — daily checklists (Sept 17–21) with owners
+  - [`docs/PLANNING.md`](docs/PLANNING.md) — planning notes
+  - [`docs/hackathon_overview.md`](docs/hackathon_overview.md) — high-level hackathon info
+  - [`docs/coral website.md`](docs/coral%20website.md) — Coral-related notes and links
+
 ### Getting Started
 Prereqs: a modern browser.
 
