@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polyglot Mediator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Polyglot Mediator</h1>
+    <p class="subtitle">Language • Cultural • Legal • Tone</p>
+  </header>
+
+  <main class="container">
+    <section class="agents">
+      <h2>Agents</h2>
+      <label><input type="checkbox" id="agent-language" checked /> Language</label>
+      <label><input type="checkbox" id="agent-cultural" checked /> Cultural</label>
+      <label><input type="checkbox" id="agent-legal" /> Legal</label>
+      <label><input type="checkbox" id="agent-tone" /> Tone</label>
+    </section>
+
+    <section class="chat">
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <form id="composer" class="composer">
+        <input id="input" type="text" placeholder="Type your message…" autocomplete="off" />
+        <select id="tone">
+          <option value="neutral" selected>Neutral tone</option>
+          <option value="formal">Formal</option>
+          <option value="friendly">Friendly</option>
+          <option value="assertive">Assertive</option>
+        </select>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Agentic Architect • Internet of Agents Hackathon</span>
+  </footer>
+
+  <script src="app.js"></script>
+  </body>
+</html>
+
+
