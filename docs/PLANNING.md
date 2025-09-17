@@ -33,23 +33,22 @@ Build a multi-agent system that coordinates specialized AI agents to provide hig
 
 ## Technical Implementation
 
-### Backend Services
-- [ ] Set up Coral Protocol integration
-- [ ] Implement agent communication protocol
-- [ ] Create API endpoints for frontend
-- [ ] Implement caching layer for performance
+### Backend Services (Stretch, post-MVP)
+- [ ] Set up Coral Protocol integration (MCP servers per agent)
+- [ ] Implement agent communication protocol / orchestrator service
+- [ ] Optional: Create API proxy endpoint `/mediate`
+- [ ] Caching layer for performance (if backend is added)
 
-### Frontend Development
-- [ ] Design and implement user interface
-- [ ] Create agent selection controls
-- [ ] Display translation results with diffs
-- [ ] Implement settings and preferences
+### Frontend Development (MVP now)
+- [x] Design and implement basic UI (HTML/CSS/JS)
+- [ ] Create agent selection controls (expanded)
+- [ ] Display mediated result with loading state and rationales
+- [ ] Implement presets, sessions, and local persistence
 
-### Infrastructure
-- [ ] Set up development environment
-- [ ] Configure CI/CD pipeline
-- [ ] Set up monitoring and logging
-- [ ] Plan for scalability
+### Infrastructure (Hackathon scope)
+- [x] Set up development environment (UI-only)
+- [ ] Basic CI (optional)
+- [ ] Plan for scalability (out of hackathon scope)
 
 ## Team Roles & Responsibilities
 

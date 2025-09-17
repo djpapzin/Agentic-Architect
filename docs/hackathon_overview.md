@@ -13,23 +13,25 @@ This repository contains the project for the Internet of Agents Hackathon, an ex
   - Distributed problem solving
   - Scalable agent architectures
 
-## Project Structure
+## Current Project Structure (MVP)
 ```
 .
-├── docs/               # Documentation files
-├── src/                # Source code
-│   ├── agents/         # Individual agent implementations
-│   ├── core/           # Core functionality and utilities
-│   └── tests/          # Test files
-├── config/             # Configuration files
-└── README.md           # Project documentation
+├── index.html          # UI (single page)
+├── styles.css          # Styles
+├── app.js              # Mock agent pipeline
+├── docs/               # Documentation
+│   ├── PRD.md          # Product requirements
+│   ├── QUICKSTART.md   # Setup and workflow
+│   ├── TODO.md         # Daily checklists
+│   ├── coral-notes.md  # Coral integration planning
+│   └── hackathon_overview.md
+└── README.md           # Repository overview
 ```
 
-## Getting Started
+## Getting Started (UI-only MVP)
 1. Clone this repository
-2. Install dependencies: `npm install`
-3. Configure your environment variables (see `.env.example`)
-4. Run the development server: `npm run dev`
+2. Open `index.html` directly or run `python -m http.server 5173`
+3. Visit `http://localhost:5173`
 
 ## Development Guidelines
 - Follow the existing code style and patterns
