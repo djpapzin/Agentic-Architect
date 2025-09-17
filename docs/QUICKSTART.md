@@ -36,4 +36,20 @@ python -m http.server 5173
 - See `docs/PRD.md` for goals/scope, and `docs/TODO.md` to track team work.
 - Coral integration plan: `docs/coral-notes.md` (coming soon).
 
+### 7) Git workflow (feature branches)
+- Always create a new branch for each feature or fix. The maintainer will merge to `main`.
+```bash
+# create and switch to a feature branch
+git checkout -b feat/<short-feature-name>
+
+# make changes, then commit
+git add -A
+git commit -m "feat: short description"
+
+# push the branch and open a PR
+git push -u origin feat/<short-feature-name>
+# then create a PR targeting main (via GitHub UI or GH CLI)
+# maintainer will review and merge
+```
+
 
