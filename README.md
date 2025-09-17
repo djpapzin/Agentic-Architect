@@ -43,6 +43,9 @@ python -m http.server 5173
 # then visit http://localhost:5173
 ```
 
+### Quickstart
+For a step-by-step, see `docs/QUICKSTART.md`.
+
 3) Try it out
 - Type a message, choose agents (Language, Cultural, Legal, Tone), and click Send.
 - You’ll see a mocked “mediated” response. We’ll replace this with Coral-backed agents next.
