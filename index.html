@@ -13,25 +13,31 @@
   </header>
 
   <main class="container">
-    <section class="agents">
+    <section class="agents" aria-label="Agent selection">
       <h2>Agents</h2>
-      <label><input type="checkbox" id="agent-language" checked /> Language</label>
-      <label><input type="checkbox" id="agent-cultural" checked /> Cultural</label>
-      <label><input type="checkbox" id="agent-legal" /> Legal</label>
-      <label><input type="checkbox" id="agent-tone" /> Tone</label>
+      <label><input type="checkbox" id="agent-language" checked aria-label="Enable Language Agent" /> Language</label>
+      <label><input type="checkbox" id="agent-cultural" checked aria-label="Enable Cultural Agent" /> Cultural</label>
+      <label><input type="checkbox" id="agent-legal" aria-label="Enable Legal Agent" /> Legal</label>
+      <label><input type="checkbox" id="agent-tone" aria-label="Enable Tone Agent" /> Tone</label>
+      <div class="spacer"></div>
+      <button id="demo-mode" class="pill" title="Load a seeded demo conversation">Demo Mode</button>
     </section>
 
-    <section class="chat">
-      <div id="messages" class="messages" aria-live="polite"></div>
-      <form id="composer" class="composer">
-        <input id="input" type="text" placeholder="Type your message…" autocomplete="off" />
-        <select id="tone">
+    <section class="chat" aria-label="Chat area">
+      <div id="messages" class="messages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+
+      <!-- Hidden live region for status updates -->
+      <div id="status-message" role="status" aria-live="polite" class="sr-only"></div>
+
+      <form id="composer" class="composer" aria-label="Message composer">
+        <input id="input" type="text" placeholder="Type your message…" autocomplete="off" aria-label="Message input" />
+        <select id="tone" aria-label="Select tone">
           <option value="neutral" selected>Neutral tone</option>
           <option value="formal">Formal</option>
           <option value="friendly">Friendly</option>
           <option value="assertive">Assertive</option>
         </select>
-        <button type="submit">Send</button>
+        <button id="send" type="submit" title="Send message">Send</button>
       </form>
     </section>
   </main>
@@ -40,8 +46,6 @@
     <span>Agentic Architect • Internet of Agents Hackathon</span>
   </footer>
 
-  <script src="app.js"></script>
-  </body>
+  <script type="module" src="app.js"></script>
+</body>
 </html>
-
-
