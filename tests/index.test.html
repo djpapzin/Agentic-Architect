@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polyglot Mediator – Browser Tests</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; padding: 16px; }
+    .pass { color: #0a7f2e; }
+    .fail { color: #b00020; }
+    .log  { color: #333; }
+    #results { margin-top: 12px; }
+    iframe { width: 100%; height: 560px; border: 1px solid #ddd; border-radius: 8px; }
+  </style>
+  </head>
+<body>
+  <h1>Polyglot Mediator – Browser Tests</h1>
+  <p>Run this page via the local server (http://localhost:5173/tests/index.test.html) to avoid cross-origin issues.</p>
+  <div>
+    <button id="run">Run Tests</button>
+  </div>
+  <div id="results" role="log" aria-live="polite"></div>
+  <iframe id="app" src="/"></iframe>
+
+  <script>
+    const results = document.getElementById('results');
+    function log(line, cls = 'log') {
+      const div = document.createElement('div');
+      div.className = cls;
+      div.textContent = line;
+      results.appendChild(div);
+    }
+    function pass(line) { log('✓ ' + line, 'pass'); }
+    function fail(line) { log('✗ ' + line, 'fail'); }
+
+    async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function runTests() {
+      results.innerHTML = '';
+      const frame = document.getElementById('app');
+      await new Promise(r => {
+        if (frame.contentDocument && frame.contentDocument.readyState === 'complete') return r();
+        frame.onload = () => r();
+      });
+      const doc = frame.contentDocument;
+
+      try {
+        // Existence checks
+        const ids = ['messages','composer','input','tone','send','demo-mode','agent-language','agent-cultural','agent-legal','agent-tone'];
+        for (const id of ids) {
+          const el = doc.getElementById(id);
+          if (el) pass('#' + id + ' exists'); else throw new Error('#' + id + ' missing');
+        }
+
+        // Demo mode produces output
+        doc.getElementById('demo-mode').click();
+        await sleep(900);
+        const bubbles = doc.querySelectorAll('.bubble');
+        if (bubbles.length >= 2) pass('Demo mode created messages'); else throw new Error('Demo mode did not create messages');
+
+        // Preset application
+        const friendlyBtn = doc.querySelector('.preset-btn[data-preset="friendly"]');
+        if (!friendlyBtn) throw new Error('Preset button (friendly) missing');
+        friendlyBtn.click();
+        const toneSelect = doc.getElementById('tone');
+        if (toneSelect.value === 'friendly') pass('Preset applied: friendly tone'); else throw new Error('Preset did not apply');
+
+        // Compose + send
+        const input = doc.getElementById('input');
+        input.value = 'Test message';
+        doc.getElementById('composer').dispatchEvent(new frame.contentWindow.Event('submit', { bubbles: true, cancelable: true }));
+        await sleep(600);
+        const afterBubbles = doc.querySelectorAll('.bubble');
+        if (afterBubbles.length > bubbles.length) pass('Send flow produced bot response'); else throw new Error('Send flow failed');
+
+        pass('All checks passed');
+      } catch (e) {
+        fail(e.message || e);
+        console.error(e);
+      }
+    }
+
+    document.getElementById('run').addEventListener('click', runTests);
+  </script>
+</body>
+</html>
+
