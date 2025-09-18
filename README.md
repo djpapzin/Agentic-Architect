@@ -1,75 +1,36 @@
-## Polyglot Mediator
+# Polyglot Mediator (Agentic Architect)
 
-A minimal, UI-first prototype for coordinating multiple specialized agents to translate, adapt tone, and ensure cultural/legal alignment across languages. Built by Agentic Architect for the Internet of Agents hackathon.
+Minimal demo for the Internet of Agents Hackathon.
 
-### Problem
-- Global teams need to communicate across languages and cultures without losing intent, tone, or compliance.
-- Existing translation tools miss nuance: cultural context, legal sensitivities, domain-specific constraints, and stylistic tone.
+## What I built
+- UI-first chat interface to orchestrate multiple agents (language, cultural, legal, tone).
+- Agent stubs under `coral/agents.js` simulate async agents and errors.
+- ARIA live region and keyboard focus styles for accessibility.
+- Demo Mode to seed an example conversation.
+- Copy-to-clipboard for bot outputs.
 
-### Solution
-Polyglot Mediator orchestrates multiple agents in parallel:
-- **Language Agent**: high-fidelity translation and paraphrasing.
-- **Cultural Agent**: adapts phrasing to cultural norms.
-- **Legal Agent**: flags risky or non-compliant wording.
-- **Tone Agent**: transforms style (formal, friendly, assertive, etc.).
+## How to run (local)
+1. Extract the ZIP and open the project folder.
+2. Use a static server (recommended). From the project folder run:
+   ```bash
+   # Python 3
+   python -m http.server 5173
+   # then open http://localhost:5173 in your browser
+   ```
+3. Or use VS Code Live Server (Open index.html with Live Server).
 
-The UI lets a user write a message, select which agents to apply, and preview combined outputs. Under the hood, we will standardize each agent using Coral Protocol so they can be registered, invoked, and composed consistently.
+## Files of interest
+- `index.html` – main UI
+- `styles.css` – improved styles + focus styles
+- `app.js` – main app logic (ES module)
+- `coral/agents.js` – agent stubs (async functions)
+- `README.md` – this file
 
-### Why Coral Protocol?
-- **Standardization**: MCP/Server conventions make agents predictable and composable.
-- **Discovery**: Coral Registry enables publishing and reusing agents across teams.
-- **Orchestration**: Clear interaction patterns for multi-agent workflows.
+## Next steps for you (manual)
+- Replace `coral/agents.js` stubs with real Coral MCP calls when you have credentials.
+- Add backend proxy `/mediate` if you want server-side secrets or streaming responses.
+- Hook up Solana payment flows if you plan to monetize agent calls.
+- Add tests in `tests/` before final submission.
 
-### Architecture (prototype)
-- `index.html` — simple chat-like interface with agent selectors.
-- `styles.css` — lightweight, responsive styles.
-- `app.js` — local-only mock orchestration (no backend yet). Later this will call standardized Coral agents.
-
-### Repository Structure
-- Root UI
-  - [`index.html`](index.html) — main UI
-  - [`styles.css`](styles.css) — styles for layout and theming
-  - [`app.js`](app.js) — mock agent pipeline and UI behaviors
-- Documentation
-  - [`docs/QUICKSTART.md`](docs/QUICKSTART.md) — fast start (clone → run → branch workflow)
-  - [`docs/PRD.md`](docs/PRD.md) — product requirements (goals, scope, milestones)
-  - [`docs/TODO.md`](docs/TODO.md) — daily checklists (Sept 17–21) with owners
-  - [`docs/PLANNING.md`](docs/PLANNING.md) — planning notes
-  - [`docs/hackathon_overview.md`](docs/hackathon_overview.md) — high-level hackathon info
-  - [`docs/coral website.md`](docs/coral%20website.md) — Coral-related notes and links
-
-### Getting Started
-Prereqs: a modern browser.
-
-1) Clone the repo
-```bash
-git clone https://github.com/djpapzin/Agentic-Architect.git
-cd "Agentic-Architect"
-```
-
-2) Open the UI
-- Double-click `index.html`, or
-- Use a local server (recommended):
-```bash
-# Python 3
-python -m http.server 5173
-# then visit http://localhost:5173
-```
-
-### Quickstart
-For a step-by-step, see `docs/QUICKSTART.md`.
-
-3) Try it out
-- Type a message, choose agents (Language, Cultural, Legal, Tone), and click Send.
-- You’ll see a mocked “mediated” response. We’ll replace this with Coral-backed agents next.
-
-### Next Steps (Roadmap)
-- Wire UI to Coral-standardized agents via MCP.
-- Add agent registry integration and presets per use case.
-- Introduce streaming responses and message history.
-- Add tests and CI.
-
-### Contributing
-PRs welcome during the hackathon. Keep code readable and small; prefer incremental commits.
-
-
+## Notes
+This package is intentionally lightweight and runs in the browser using ES modules.

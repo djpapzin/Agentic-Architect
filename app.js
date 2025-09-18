@@ -1,3 +1,5 @@
+import { languageAgent, culturalAgent, legalAgent, toneAgent } from './coral/agents.js';
+
 const state = {
   messages: []
 };
@@ -7,35 +9,76 @@ function byId(id) { return document.getElementById(id); }
 function addMessage(role, text) {
   state.messages.push({ role, text, at: new Date() });
   render();
+
+  // Announce new message for screen readers
+  const announcer = byId('status-message');
+  announcer.textContent = `${role === 'user' ? 'You' : 'Polyglot Mediator'}: ${text}`;
 }
 
 function render() {
   const container = byId('messages');
   container.innerHTML = '';
-  for (const m of state.messages) {
+  for (const [i, m] of state.messages.entries()) {
     const div = document.createElement('div');
     div.className = `bubble ${m.role}`;
-    div.innerHTML = `${escapeHtml(m.text)}<small>${m.role === 'user' ? 'You' : 'Polyglot Mediator'} • ${m.at.toLocaleTimeString()}</small>`;
+    div.innerHTML = `<div class="bubble-text">${escapeHtml(m.text)}</div><small>${m.role === 'user' ? 'You' : 'Polyglot Mediator'} • ${m.at.toLocaleTimeString()}</small>`;
+
+    // copy button for bot bubbles
+    if (m.role === 'bot') {
+      const copy = document.createElement('button');
+      copy.className = 'copy-btn';
+      copy.title = 'Copy message';
+      copy.innerText = '📋';
+      copy.addEventListener('click', () => navigator.clipboard.writeText(m.text));
+      div.appendChild(copy);
+    }
+
     container.appendChild(div);
   }
   container.scrollTop = container.scrollHeight;
 }
 
 function escapeHtml(str) {
-  return str.replace(/[&<>"]+/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[s]));
+  return String(str).replace(/[&<>"]+/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[s]));
 }
 
-function mockMediate(input, opts) {
-  const enabled = Object.entries(opts).filter(([, v]) => !!v).map(([k]) => k).join(', ');
-  const toneMap = { neutral: 'neutral', formal: 'more formal', friendly: 'friendlier', assertive: 'more assertive' };
-  const tone = toneMap[opts.tone] || 'neutral';
-  return `Processed with: ${enabled || 'none'}. Tone: ${tone}.\n\n“${input}”`;
+async function mediatePipeline(text, opts) {
+  // Run agents sequentially and return combined output (string)
+  let result = text;
+  const steps = [];
+  try {
+    if (opts.language) {
+      const out = await languageAgent(result);
+      steps.push(out);
+      result = out;
+    }
+    if (opts.cultural) {
+      const out = await culturalAgent(result);
+      steps.push(out);
+      result = out;
+    }
+    if (opts.legal) {
+      const out = await legalAgent(result);
+      steps.push(out);
+      result = out;
+    }
+    if (opts.toneAgent) {
+      const out = await toneAgent(result, opts.tone);
+      steps.push(out);
+      result = out;
+    }
+    // combine steps into readable summary
+    const summary = steps.map((s,i)=>`Step ${i+1}: ${s}`).join('\n\n');
+    return summary;
+  } catch (err) {
+    return `[Error in pipeline] ${err.message || err}`;
+  }
 }
 
-byId('composer').addEventListener('submit', (e) => {
+byId('composer').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const input = byId('input');
-  const text = input.value.trim();
+  const inputEl = byId('input');
+  const text = inputEl.value.trim();
   if (!text) return;
 
   const opts = {
@@ -48,17 +91,32 @@ byId('composer').addEventListener('submit', (e) => {
 
   addMessage('user', text);
 
-  // Simulate a small delay as if orchestrating remote agents
-  setTimeout(() => {
-    const out = mockMediate(text, { ...opts });
-    addMessage('bot', out);
-  }, 350);
+  // show an interim bot message for UX
+  addMessage('bot', 'Processing…');
 
-  input.value = '';
-  input.focus();
+  const out = await mediatePipeline(text, opts);
+
+  // replace last bot message with real output
+  state.messages = state.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
+  addMessage('bot', out);
+
+  inputEl.value = '';
+  inputEl.focus();
+});
+
+// Demo mode - seed conversation
+byId('demo-mode').addEventListener('click', () => {
+  state.messages = [];
+  addMessage('user', 'Hey, can you review this short contract?');
+  addMessage('bot', 'Processing…');
+  setTimeout(async () => {
+    const out = await mediatePipeline('Hey, can you review this short contract?', {
+      language: true, cultural: true, legal: true, toneAgent: true, tone: 'formal'
+    });
+    state.messages = state.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
+    addMessage('bot', out);
+  }, 400);
 });
 
 // Initial greeting
 addMessage('bot', 'Welcome! Type a message, select agents, then press Send.');
-
-
