@@ -46,13 +46,40 @@ body {
   margin: 12px auto;
   padding: 12px;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 220px 260px 1fr;
   gap: 18px;
   flex: 1;
   align-items: start;
 }
 
 /* Sidebar (agents) */
+.sessions {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent), var(--panel);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+  min-height: 220px;
+}
+.sessions h2 { margin: 0 0 12px; font-size: 16px; color: var(--muted); }
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #0f1733;
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+}
+.session-item.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(110,168,254,0.2) inset; }
+.session-name { font-size: 14px; color: var(--text); }
+.session-meta { font-size: 12px; color: var(--muted); }
 .agents {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent), var(--panel);
   border: 1px solid rgba(255,255,255,0.06);

@@ -1,13 +1,54 @@
 import { languageAgent, culturalAgent, legalAgent, toneAgent } from './coral/agents.js';
 
 const state = {
-  messages: []
+  sessions: {},
+  activeSessionId: null
 };
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('polyglot-sessions');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state.sessions = parsed.sessions || {};
+      state.activeSessionId = parsed.activeSessionId || null;
+    }
+  } catch {}
+  if (!state.activeSessionId) {
+    createSession();
+  }
+}
+
+function persistState() {
+  localStorage.setItem('polyglot-sessions', JSON.stringify({
+    sessions: state.sessions,
+    activeSessionId: state.activeSessionId
+  }));
+}
+
+function createSession() {
+  const id = 's_' + Math.random().toString(36).slice(2, 9);
+  state.sessions[id] = { id, name: `Session ${Object.keys(state.sessions).length + 1}`, messages: [] };
+  state.activeSessionId = id;
+  persistState();
+  renderSessions();
+  render();
+}
+
+function switchSession(id) {
+  if (!state.sessions[id]) return;
+  state.activeSessionId = id;
+  persistState();
+  renderSessions();
+  render();
+}
 
 function byId(id) { return document.getElementById(id); }
 
 function addMessage(role, text) {
-  state.messages.push({ role, text, at: new Date() });
+  const session = state.sessions[state.activeSessionId];
+  session.messages.push({ role, text, at: new Date() });
+  persistState();
   render();
 
   // Announce new message for screen readers
@@ -18,7 +59,8 @@ function addMessage(role, text) {
 function render() {
   const container = byId('messages');
   container.innerHTML = '';
-  for (const [i, m] of state.messages.entries()) {
+  const session = state.sessions[state.activeSessionId];
+  for (const [i, m] of session.messages.entries()) {
     const div = document.createElement('div');
     div.className = `bubble ${m.role}`;
     div.innerHTML = `<div class="bubble-text">${escapeHtml(m.text)}</div><small>${m.role === 'user' ? 'You' : 'Polyglot Mediator'} • ${m.at.toLocaleTimeString()}</small>`;
@@ -97,8 +139,10 @@ byId('composer').addEventListener('submit', async (e) => {
   const out = await mediatePipeline(text, opts);
 
   // replace last bot message with real output
-  state.messages = state.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
+  const session = state.sessions[state.activeSessionId];
+  session.messages = session.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
   addMessage('bot', out);
+  persistState();
 
   inputEl.value = '';
   inputEl.focus();
@@ -106,17 +150,53 @@ byId('composer').addEventListener('submit', async (e) => {
 
 // Demo mode - seed conversation
 byId('demo-mode').addEventListener('click', () => {
-  state.messages = [];
+  const session = state.sessions[state.activeSessionId];
+  session.messages = [];
   addMessage('user', 'Hey, can you review this short contract?');
   addMessage('bot', 'Processing…');
   setTimeout(async () => {
     const out = await mediatePipeline('Hey, can you review this short contract?', {
       language: true, cultural: true, legal: true, toneAgent: true, tone: 'formal'
     });
-    state.messages = state.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
+    const session2 = state.sessions[state.activeSessionId];
+    session2.messages = session2.messages.filter(m=> !(m.role==='bot' && m.text==='Processing…'));
     addMessage('bot', out);
+    persistState();
   }, 400);
 });
 
 // Initial greeting
+function renderSessions() {
+  const list = byId('sessions-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const entries = Object.values(state.sessions);
+  for (const s of entries) {
+    const item = document.createElement('div');
+    item.className = 'session-item' + (s.id === state.activeSessionId ? ' active' : '');
+    item.setAttribute('role', 'option');
+    item.setAttribute('aria-selected', s.id === state.activeSessionId ? 'true' : 'false');
+
+    const name = document.createElement('div');
+    name.className = 'session-name';
+    name.textContent = s.name;
+    item.appendChild(name);
+
+    const meta = document.createElement('div');
+    meta.className = 'session-meta';
+    meta.textContent = `${s.messages.length} msg`;
+    item.appendChild(meta);
+
+    item.addEventListener('click', () => switchSession(s.id));
+    list.appendChild(item);
+  }
+}
+
+byId('new-session')?.addEventListener('click', () => {
+  createSession();
+  addMessage('bot', 'New session created.');
+});
+
+loadState();
+renderSessions();
 addMessage('bot', 'Welcome! Type a message, select agents, then press Send.');

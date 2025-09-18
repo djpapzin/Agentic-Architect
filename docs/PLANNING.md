@@ -41,9 +41,10 @@ Build a multi-agent system that coordinates specialized AI agents to provide hig
 
 ### Frontend Development (MVP now)
 - [x] Design and implement basic UI (HTML/CSS/JS)
-- [ ] Create agent selection controls (expanded)
-- [ ] Display mediated result with loading state and rationales
-- [ ] Implement presets, sessions, and local persistence
+- [x] Create agent selection controls (expanded)
+- [x] Display mediated result with loading state (rationales pending)
+- [x] Implement sessions with local persistence (multi-session sidebar)
+- [ ] Implement presets with local persistence
 
 ### Infrastructure (Hackathon scope)
 - [x] Set up development environment (UI-only)
