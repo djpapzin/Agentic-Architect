@@ -14,6 +14,18 @@ function loadState() {
       state.activeSessionId = parsed.activeSessionId || null;
     }
   } catch {}
+  // load default agent preset
+  try {
+    const presetRaw = localStorage.getItem('polyglot-preset-default');
+    if (presetRaw) {
+      const p = JSON.parse(presetRaw);
+      byId('agent-language').checked = !!p.language;
+      byId('agent-cultural').checked = !!p.cultural;
+      byId('agent-legal').checked = !!p.legal;
+      byId('agent-tone').checked = !!p.toneAgent;
+      if (p.tone) byId('tone').value = p.tone;
+    }
+  } catch {}
   if (!state.activeSessionId) {
     createSession();
   }
@@ -195,6 +207,39 @@ function renderSessions() {
 byId('new-session')?.addEventListener('click', () => {
   createSession();
   addMessage('bot', 'New session created.');
+});
+
+// Presets wiring
+function applyPreset(presetName) {
+  const presets = {
+    neutral: { language: true, cultural: true, legal: false, toneAgent: true, tone: 'neutral' },
+    friendly: { language: true, cultural: true, legal: false, toneAgent: true, tone: 'friendly' },
+    formal: { language: true, cultural: true, legal: true, toneAgent: true, tone: 'formal' }
+  };
+  const p = presets[presetName];
+  if (!p) return;
+  byId('agent-language').checked = p.language;
+  byId('agent-cultural').checked = p.cultural;
+  byId('agent-legal').checked = p.legal;
+  byId('agent-tone').checked = p.toneAgent;
+  byId('tone').value = p.tone;
+}
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyPreset(btn.getAttribute('data-preset')));
+});
+
+byId('save-default')?.addEventListener('click', () => {
+  const preset = {
+    language: byId('agent-language').checked,
+    cultural: byId('agent-cultural').checked,
+    legal: byId('agent-legal').checked,
+    toneAgent: byId('agent-tone').checked,
+    tone: byId('tone').value
+  };
+  localStorage.setItem('polyglot-preset-default', JSON.stringify(preset));
+  const announcer = byId('status-message');
+  announcer.textContent = 'Default preset saved';
 });
 
 loadState();

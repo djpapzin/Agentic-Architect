@@ -46,7 +46,7 @@ body {
   margin: 12px auto;
   padding: 12px;
   display: grid;
-  grid-template-columns: 220px 260px 1fr;
+  grid-template-columns: 220px 260px 220px 1fr;
   gap: 18px;
   flex: 1;
   align-items: start;
@@ -86,6 +86,24 @@ body {
   border-radius: var(--radius);
   padding: 16px;
   min-height: 220px;
+}
+.presets {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent), var(--panel);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+  min-height: 220px;
+}
+.presets h2 { margin: 0 0 12px; font-size: 16px; color: var(--muted); }
+.presets-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.preset-btn {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #0f1733;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
 }
 .agents h2 { margin: 0 0 12px; font-size: 16px; color: var(--muted); }
 .agents label { 
